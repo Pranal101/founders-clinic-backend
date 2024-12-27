@@ -1,0 +1,31 @@
+<div className="loginGroup">
+                    <label htmlFor="role" className="form-label">
+                      Role
+                    </label>
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        name="role"
+                        value="user"
+                        checked={role === "user"}
+                        onChange={(e) => setRole(e.target.value)}
+                      />
+                      <label className="form-check-label" htmlFor="userRole">
+                        User
+                      </label>
+                    </div>
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        name="role"
+                        value="admin"
+                        checked={role === "admin"}
+                        onChange={(e) => setRole(e.target.value)}
+                      />
+                      <label className="form-check-label" htmlFor="adminRole">
+                        Admin
+                      </label>
+                    </div>
+                  </div>
