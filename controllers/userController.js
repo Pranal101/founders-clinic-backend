@@ -3,6 +3,8 @@ import EnterpriseProfile from "../models/enterpriseProfile.js";
 import ProfessionalProfile from "../models/professionalProfile.js";
 import InternProfile from "../models/internProfile.js";
 import Document from "../models/documentModel.js";
+import Application from "../models/applicationModel.js";
+import Job from "../models/jobModel.js";
 import multer from "multer";
 const upload = multer({ dest: "uploads/" });
 // Create a new user and corresponding profile
@@ -257,5 +259,226 @@ export const uploadLogo = async (req, res) => {
   } catch (error) {
     console.error("Error uploading logo:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+//send job application
+export const createApplication = async (req, res) => {
+  try {
+    const { message, jobId } = req.body;
+
+    // Validate the request body
+    if (!jobId) {
+      return res.status(400).json({ message: "Job ID is required." });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ message: "Resume file is required." });
+    }
+
+    // Generate the resume file path
+    const resumeLink = `/uploads/${req.file.filename}`; // Using multer upload destination
+
+    // Create a new job application
+    const newApplication = new Application({
+      jobId,
+      applicantId: req.user.uid, // User's UID from middleware
+      message,
+      resumeLink,
+    });
+
+    await newApplication.save();
+
+    res.status(201).json({
+      message: "Application submitted successfully.",
+      application: newApplication,
+    });
+  } catch (error) {
+    console.error("Error creating application:", error);
+    res
+      .status(500)
+      .json({ message: "Failed to submit application. Try again later." });
+  }
+};
+
+//get all applied jobs by a user
+export const getAppliedJobs = async (req, res) => {
+  try {
+    const uid = req.user.uid; // User ID from authenticated request
+
+    // Fetch applications for the logged-in user
+    const applications = await Application.find({ applicantId: uid }).populate(
+      "jobId"
+    );
+
+    if (!applications.length) {
+      return res.status(404).json({ message: "No applications found." });
+    }
+
+    // Format the response with necessary job details
+    const formattedApplications = applications.map((app) => ({
+      _id: app._id,
+      appliedDate: app.appliedDate,
+      status: app.status,
+      job: {
+        _id: app.jobId._id,
+        title: app.jobId.title,
+        logoUrl: app.jobId.logoUrl,
+        description: app.jobId.description,
+        location: app.jobId.jobLocation,
+      },
+    }));
+
+    res.status(200).json({
+      success: true,
+      applications: formattedApplications,
+    });
+  } catch (error) {
+    console.error("Error fetching applications:", error);
+    res.status(500).json({ message: "Server error. Please try again later." });
+  }
+};
+//get all applicants
+// export const getApplicantsForEnterprise = async (req, res) => {
+//   try {
+//     const uid = req.user.uid;
+
+//     if (!uid) {
+//       return res.status(400).json({ message: "User ID is missing in request" });
+//     }
+
+//     // Step 1: Get all jobs posted by the enterprise
+//     const jobs = await Job.find({ enterpriseId: uid });
+
+//     if (!jobs.length) {
+//       return res
+//         .status(404)
+//         .json({ message: "No jobs found for this enterprise" });
+//     }
+
+//     // Extract job IDs
+//     const jobIds = jobs.map((job) => job._id);
+
+//     // Step 2: Get all applications for the jobs
+//     const applications = await Application.find({ jobId: { $in: jobIds } })
+//       .populate("jobId") // Optional: Populate job details if needed
+//       .exec();
+
+//     if (!applications.length) {
+//       return res
+//         .status(404)
+//         .json({ message: "No applications found for the jobs" });
+//     }
+
+//     // Step 3: Format the response
+//     const result = applications.map((application) => ({
+//       applicationId: application._id,
+//       jobTitle: application.jobId?.title || "N/A",
+//       applicantId: application.applicantId,
+//       status: application.status,
+//       appliedDate: application.appliedDate,
+//       resumeLink: application.resumeLink,
+//       message: application.message,
+//     }));
+
+//     res.status(200).json({ applicants: result });
+//   } catch (error) {
+//     console.error("Error fetching applicants:", error);
+//     res
+//       .status(500)
+//       .json({ message: "Unable to fetch applicants for the enterprise" });
+//   }
+// };
+export const getApplicantsForEnterprise = async (req, res) => {
+  try {
+    const uid = req.user.uid;
+
+    if (!uid) {
+      return res.status(400).json({ message: "User ID is missing in request" });
+    }
+
+    // Step 1: Get all jobs posted by the enterprise
+    const jobs = await Job.find({ enterpriseId: uid });
+
+    if (!jobs.length) {
+      return res
+        .status(404)
+        .json({ message: "No jobs found for this enterprise" });
+    }
+
+    // Extract job IDs
+    const jobIds = jobs.map((job) => job._id);
+
+    // Step 2: Get all applications for the jobs
+    const applications = await Application.find({ jobId: { $in: jobIds } })
+      .populate("jobId")
+      .exec();
+
+    if (!applications.length) {
+      return res
+        .status(404)
+        .json({ message: "No applications found for the jobs" });
+    }
+
+    // Step 3: Fetch applicant profiles and format the response
+    const result = await Promise.all(
+      applications.map(async (application) => {
+        const professionalProfile = await ProfessionalProfile.findOne({
+          userId: application.applicantId,
+        });
+        const internProfile = await InternProfile.findOne({
+          userId: application.applicantId,
+        });
+
+        let profileData = {};
+
+        if (professionalProfile) {
+          profileData = {
+            name: `${professionalProfile.firstName} ${professionalProfile.lastName}`,
+            phone: professionalProfile.phone,
+            email: professionalProfile.emailAddress,
+            country: professionalProfile.country,
+            city: professionalProfile.city,
+            address: professionalProfile.completeAddress,
+            entityName: professionalProfile.entityName,
+            role: professionalProfile.organizationRole,
+            portfolio: professionalProfile.portfolio,
+            website: professionalProfile.websiteLink,
+            experienceYears: professionalProfile.experienceYears,
+          };
+        } else if (internProfile) {
+          profileData = {
+            name: `${internProfile.firstName} ${internProfile.lastName}`,
+            phone: internProfile.phone,
+            email: internProfile.emailAddress,
+            country: internProfile.country,
+            city: internProfile.city,
+            address: internProfile.completeAddress,
+            entityName: internProfile.entityName,
+            role: internProfile.organizationRole,
+            portfolio: internProfile.portfolio,
+            website: internProfile.websiteLink,
+            experienceYears: internProfile.experienceYears,
+          };
+        }
+
+        return {
+          applicationId: application._id,
+          jobTitle: application.jobId?.title || "N/A",
+          applicantId: application.applicantId,
+          status: application.status,
+          appliedDate: application.appliedDate,
+          resumeLink: application.resumeLink,
+          message: application.message,
+          applicant: profileData, // Include full profile data
+        };
+      })
+    );
+
+    res.status(200).json({ applicants: result });
+  } catch (error) {
+    console.error("Error fetching applicants:", error);
+    res
+      .status(500)
+      .json({ message: "Unable to fetch applicants for the enterprise" });
   }
 };

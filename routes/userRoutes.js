@@ -8,8 +8,14 @@ import {
   getRole,
   uploadDocuments,
   uploadLogo,
+  createApplication,
+  getAppliedJobs,
+  getApplicantsForEnterprise,
 } from "../controllers/userController.js";
-import { fetchEnterpriseProfileByUid } from "../controllers/enterpriseContrtoller.js";
+import {
+  fetchEnterpriseProfileByUid,
+  updateApplicationStatus,
+} from "../controllers/enterpriseContrtoller.js";
 import {
   deleteEducation,
   deleteExperience,
@@ -34,14 +40,23 @@ router.post(
   upload.single("file"),
   uploadLogo
 );
-
+//send job application
+router.post(
+  "/apply",
+  authenticateUser,
+  upload.single("resume"),
+  createApplication
+);
+//get applied jobs
+router.get("/applied-jobs", authenticateUser, getAppliedJobs);
 /*ENTERPIRSE ROUTES*/
 router
   .route("/company-profile")
   .get(authenticateUser, fetchEnterpriseProfileByUid);
-export default router;
-
+router.put("/:applicationId/status", updateApplicationStatus);
+router.get("/applicants", authenticateUser, getApplicantsForEnterprise);
 /*PROFESSIOANL ROUTES*/
 router.patch("/profile/education", deleteEducation);
 
 router.patch("/profile/experience", deleteExperience);
+export default router;

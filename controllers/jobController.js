@@ -40,7 +40,7 @@ export const createJob = async (req, res) => {
 
     // Create job with the enterpriseId from the found profile
     const newJob = new Job({
-      enterpriseId: enterpriseProfile._id,
+      enterpriseId: userId,
       logoUrl: enterpriseProfile.logoUrl,
       title,
       description,
@@ -92,7 +92,7 @@ export const getJobs = async (req, res) => {
 
     // Fetch jobs for this enterprise profile
     const jobs = await Job.find({
-      enterpriseId: enterpriseProfile._id.toString(),
+      enterpriseId: userId,
       isApproved: true, // Ensure only approved jobs are fetched
     });
 
