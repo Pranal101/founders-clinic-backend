@@ -2,6 +2,9 @@ import User from "../models/userModel.js";
 import EnterpriseProfile from "../models/enterpriseProfile.js";
 import ProfessionalProfile from "../models/professionalProfile.js";
 import InternProfile from "../models/internProfile.js";
+import InvestorProfile from "../models/investorProfile.js";
+import NetworkingCommunityProfile from "../models/networkingCommunity.js";
+import EventHostsProfile from "../models/EventHosts.js";
 import Document from "../models/documentModel.js";
 import Application from "../models/applicationModel.js";
 import Job from "../models/jobModel.js";
@@ -137,6 +140,12 @@ export const addRole = async (req, res) => {
       formFields = ProfessionalProfile.schema.obj;
     } else if (role === "Intern") {
       formFields = InternProfile.schema.obj;
+    } else if (role === "Investor") {
+      formFields = InvestorProfile.schema.obj;
+    } else if (role === "Networking Community") {
+      formFields = NetworkingCommunityProfile.schema.obj;
+    } else if (role === "Event Hosts") {
+      formFields = EventHostsProfile.schema.obj;
     } else {
       return res.status(400).json({ message: "Invalid role" });
     }
