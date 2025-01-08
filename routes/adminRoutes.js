@@ -5,6 +5,8 @@ import {
   getAllJobs,
   approveProfile,
   getAllProfiles,
+  getAllEvents,
+  approveEvent,
 } from "../controllers/adminController.js";
 const router = express.Router();
 
@@ -17,4 +19,8 @@ router.patch(
 );
 router.get("/jobs", getAllJobs);
 router.patch("/jobs/:jobId/approve", approveJob);
+
+//events
+router.get("/events", getAllEvents);
+router.patch("/events/:eventId/approve", approveEvent);
 export default router;

@@ -20,6 +20,12 @@ import {
   deleteEducation,
   deleteExperience,
 } from "../controllers/professionalController.js";
+import {
+  createEvent,
+  deleteEvent,
+  getEventById,
+  getEvents,
+} from "../controllers/networkingController.js";
 
 const router = express.Router();
 const upload = multer({ dest: "uploads/" });
@@ -49,14 +55,25 @@ router.post(
 );
 //get applied jobs
 router.get("/applied-jobs", authenticateUser, getAppliedJobs);
+
 /*ENTERPIRSE ROUTES*/
 router
   .route("/company-profile")
   .get(authenticateUser, fetchEnterpriseProfileByUid);
 router.put("/:applicationId/status", updateApplicationStatus);
 router.get("/applicants", authenticateUser, getApplicantsForEnterprise);
+
 /*PROFESSIOANL ROUTES*/
 router.patch("/profile/education", deleteEducation);
 
 router.patch("/profile/experience", deleteExperience);
+
+/*Networking Community ROUTES*/
+router.post("/new-events", authenticateUser, createEvent);
+
+// Get approved events
+router.get("/get-events", authenticateUser, getEvents);
+// Delete an event by ID
+router.delete("/events/:eventId", deleteEvent);
+router.get("/events/:eventId", getEventById);
 export default router;

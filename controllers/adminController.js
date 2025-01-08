@@ -1,3 +1,4 @@
+import Events from "../models/Events.js";
 import Job from "../models/jobModel.js";
 //JOBS
 // Get all Jobs (for ADMIN)
@@ -123,5 +124,56 @@ export const getAllProfiles = async (req, res) => {
   } catch (error) {
     console.error("Error fetching profiles:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+//get all events
+export const getAllEvents = async (req, res) => {
+  try {
+    // Fetch all events
+    const events = await Events.find();
+
+    if (events.length === 0) {
+      return res.status(404).json({
+        message: "No events found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Events fetched successfully",
+      events,
+    });
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+//Approve an Event
+export const approveEvent = async (req, res) => {
+  try {
+    // Get the event ID from the request parameters
+    const { eventId } = req.params;
+
+    // Find the event by ID and update its isApproved field to true
+    const event = await Events.findByIdAndUpdate(
+      eventId,
+      { isApproved: true },
+      { new: true } // Return the updated document
+    );
+
+    if (!event) {
+      return res.status(404).json({
+        message: "Event not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Event approved successfully",
+      event,
+    });
+  } catch (error) {
+    console.error("Error approving event:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };

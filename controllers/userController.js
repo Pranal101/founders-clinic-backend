@@ -4,11 +4,11 @@ import ProfessionalProfile from "../models/professionalProfile.js";
 import InternProfile from "../models/internProfile.js";
 import InvestorProfile from "../models/investorProfile.js";
 import NetworkingCommunityProfile from "../models/networkingCommunity.js";
-import EventHostsProfile from "../models/EventHosts.js";
 import Document from "../models/documentModel.js";
 import Application from "../models/applicationModel.js";
 import Job from "../models/jobModel.js";
 import multer from "multer";
+import NetworkingCommunity from "../models/networkingCommunity.js";
 const upload = multer({ dest: "uploads/" });
 // Create a new user and corresponding profile
 // export const registerUser = async (req, res) => {
@@ -144,8 +144,6 @@ export const addRole = async (req, res) => {
       formFields = InvestorProfile.schema.obj;
     } else if (role === "Networking Community") {
       formFields = NetworkingCommunityProfile.schema.obj;
-    } else if (role === "Event Hosts") {
-      formFields = EventHostsProfile.schema.obj;
     } else {
       return res.status(400).json({ message: "Invalid role" });
     }
@@ -186,6 +184,18 @@ export const updateProfile = async (req, res) => {
       );
     } else if (user.role === "Intern") {
       profile = await InternProfile.findOneAndUpdate(
+        { userId },
+        { ...profileData },
+        { new: true, upsert: true }
+      );
+    } else if (user.role === "Networking Community") {
+      profile = await NetworkingCommunity.findOneAndUpdate(
+        { userId },
+        { ...profileData },
+        { new: true, upsert: true }
+      );
+    } else if (user.role === "Investor") {
+      profile = await InvestorProfile.findOneAndUpdate(
         { userId },
         { ...profileData },
         { new: true, upsert: true }

@@ -3,6 +3,8 @@ import EnterpriseProfile from "../models/enterpriseProfile.js";
 import ProfessionalProfile from "../models/professionalProfile.js";
 import InternProfile from "../models/internProfile.js";
 import Application from "../models/applicationModel.js";
+import InvestorProfile from "../models/investorProfile.js";
+import NetworkingCommunity from "../models/networkingCommunity.js";
 
 export const fetchEnterpriseProfileByUid = async (req, res) => {
   const userId = req.user.uid; // User's unique identifier from middleware
@@ -21,6 +23,10 @@ export const fetchEnterpriseProfileByUid = async (req, res) => {
       profile = await ProfessionalProfile.findOne({ userId });
     } else if (user.role === "Intern") {
       profile = await InternProfile.findOne({ userId });
+    } else if (user.role === "Investor") {
+      profile = await InvestorProfile.findOne({ userId });
+    } else if (user.role === "Networking Community") {
+      profile = await NetworkingCommunity.findOne({ userId });
     } else {
       return res.status(400).json({ message: "User role not set" });
     }
