@@ -193,3 +193,26 @@ export const getAllJobs = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+//getEnterpriseId for chats
+export const getEnterpriseIdByJobId = async (req, res) => {
+  try {
+    const { jobId } = req.params;
+
+    if (!jobId) {
+      return res.status(400).json({ error: "Job ID is required." });
+    }
+
+    const job = await Job.findById(jobId);
+
+    if (!job) {
+      return res.status(404).json({ error: "Job not found." });
+    }
+
+    res.status(200).json({ enterpriseId: job.enterpriseId });
+  } catch (error) {
+    console.error("Error fetching enterpriseId:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching enterpriseId." });
+  }
+};

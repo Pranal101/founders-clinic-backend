@@ -73,3 +73,26 @@ export const updateApplicationStatus = async (req, res) => {
     return res.status(500).json({ error: "Server error occurred." });
   }
 };
+//view all companies
+export const viewAllEnterprises = async (req, res) => {
+  try {
+    // Fetch all enterprises from the database
+    const enterprises = await EnterpriseProfile.find().populate("documents");
+
+    // Return the data in the response
+    return res.status(200).json({
+      success: true,
+      message: "Enterprises fetched successfully",
+      data: enterprises,
+    });
+  } catch (error) {
+    console.error("Error fetching enterprises:", error);
+
+    // Handle errors and return a response
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching enterprises",
+      error: error.message,
+    });
+  }
+};

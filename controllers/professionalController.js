@@ -63,3 +63,13 @@ export const deleteExperience = async (req, res) => {
     });
   }
 };
+// Controller to fetch all professionals
+export const getAllProfessionals = async (req, res) => {
+  try {
+    const professionals = await ProfessionalProfile.find();
+    res.status(200).json({ success: true, data: professionals });
+  } catch (error) {
+    console.error("Error fetching professionals:", error);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};

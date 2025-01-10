@@ -7,6 +7,7 @@ import {
   deleteJob,
   getAllJobs,
   getJobById,
+  getEnterpriseIdByJobId,
 } from "../controllers/jobController.js";
 
 const router = express.Router();
@@ -28,5 +29,8 @@ router.patch("/:jobId", updateJob);
 
 // Route to delete a job posting
 router.delete("/:jobId", deleteJob);
+
+// Route to fetch enterpriseId for chats
+router.get("/:jobId/enterpriseId", getEnterpriseIdByJobId);
 
 export default router;

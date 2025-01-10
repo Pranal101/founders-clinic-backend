@@ -501,3 +501,13 @@ export const getApplicantsForEnterprise = async (req, res) => {
       .json({ message: "Unable to fetch applicants for the enterprise" });
   }
 };
+//view all investors
+export const getAllInvestors = async (req, res) => {
+  try {
+    const investors = await InvestorProfile.find();
+    res.status(200).json({ success: true, data: investors });
+  } catch (error) {
+    console.error("Error fetching investors:", error);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};

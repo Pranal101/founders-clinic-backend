@@ -202,3 +202,12 @@ export const getEventById = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+// Controller to fetch all networking community profiles
+export const getAllNetworkingCommunities = async (req, res) => {
+  try {
+    const networkingCommunities = await NetworkingCommunity.find();
+    res.status(200).json({ success: true, data: networkingCommunities });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
