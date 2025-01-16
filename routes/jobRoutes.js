@@ -22,7 +22,7 @@ router.get("/get-all-jobs", authenticateUser, getAllJobs);
 router.get("/all-jobs", authenticateUser, getJobs);
 
 // Route to fetch a job by ID
-router.get("/:jobId", authenticateUser, getJobById);
+router.get("/:jobId", getJobById);
 
 // Route to update a job posting
 router.patch("/:jobId", updateJob);

@@ -8,6 +8,7 @@ import Document from "../models/documentModel.js";
 import Application from "../models/applicationModel.js";
 import Job from "../models/jobModel.js";
 import multer from "multer";
+import bcrypt from "bcrypt";
 import NetworkingCommunity from "../models/networkingCommunity.js";
 const upload = multer({ dest: "uploads/" });
 // Create a new user and corresponding profile
@@ -56,7 +57,7 @@ const upload = multer({ dest: "uploads/" });
 
 //**Latest**
 export const registerUser = async (req, res) => {
-  const { name, email, uid } = req.body;
+  const { name, email, uid, authProvider, password } = req.body;
 
   try {
     // Check if the user already exists
@@ -64,7 +65,15 @@ export const registerUser = async (req, res) => {
 
     if (!user) {
       // Create a new user
-      user = new User({ name, email, uid, role: null, isApproved: false });
+      user = new User({
+        name,
+        email,
+        uid,
+        authProvider,
+        password,
+        role: null,
+        isApproved: false,
+      });
       await user.save();
 
       return res.status(201).json({
@@ -84,7 +93,41 @@ export const registerUser = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+//login user
+export const loginUser = async (req, res) => {
+  const { uid, email, password } = req.body;
 
+  try {
+    // Check if the user exists in the database
+    const user = await User.findOne({ uid, email });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found. Please sign up first.",
+      });
+    }
+
+    // Validate the password using bcrypt
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        message: "Invalid password. Please try again.",
+      });
+    }
+
+    // Return user details
+    res.status(200).json({
+      message: "User logged in successfully",
+      user,
+    });
+  } catch (error) {
+    console.error("Error logging in user:", error);
+    res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
 // export const addRole = async (req, res) => {
 //   try {
 //     console.log("Authenticated User:", req.user);

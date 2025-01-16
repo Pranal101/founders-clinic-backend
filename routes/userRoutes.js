@@ -12,6 +12,7 @@ import {
   getAppliedJobs,
   getApplicantsForEnterprise,
   getAllInvestors,
+  loginUser,
 } from "../controllers/userController.js";
 import {
   fetchEnterpriseProfileByUid,
@@ -42,6 +43,8 @@ const router = express.Router();
 const upload = multer({ dest: "uploads/" });
 // User registration or login
 router.route("/register").post(registerUser);
+//User log in
+router.route("/login").post(loginUser);
 // Update user role
 router.route("/role").patch(authenticateUser, addRole);
 //get user role
