@@ -336,3 +336,38 @@ export const getUserCountsByRole = async (req, res) => {
     });
   }
 };
+// Generic function to fetch users by role
+const getUsersByRole = async (req, res, role) => {
+  try {
+    const users = await User.find({ role });
+    if (!users || users.length === 0) {
+      return res
+        .status(404)
+        .json({ error: `No users found for role: ${role}` });
+    }
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching users" });
+  }
+};
+
+// Controllers for each role
+export const getEnterpriseUsers = async (req, res) => {
+  await getUsersByRole(req, res, "Enterprise");
+};
+
+export const getProfessionalUsers = async (req, res) => {
+  await getUsersByRole(req, res, "Professional");
+};
+
+export const getInternUsers = async (req, res) => {
+  await getUsersByRole(req, res, "Intern");
+};
+
+export const getInvestorUsers = async (req, res) => {
+  await getUsersByRole(req, res, "Investor");
+};
+
+export const getNetworkingUsers = async (req, res) => {
+  await getUsersByRole(req, res, "Networking Community");
+};

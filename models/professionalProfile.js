@@ -62,6 +62,7 @@ const professionalProfileSchema = new mongoose.Schema({
   freeConsultation: { type: String },
   contactPreference: { type: String },
   acceptTerms: { type: Boolean, default: false },
+  isShortlisted: { type: Boolean, default: false },
   documents: [
     {
       type: mongoose.Schema.Types.ObjectId,

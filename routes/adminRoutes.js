@@ -12,6 +12,11 @@ import {
   getAllUsers,
   updateUserApproval,
   getUserCountsByRole,
+  getEnterpriseUsers,
+  getProfessionalUsers,
+  getInternUsers,
+  getInvestorUsers,
+  getNetworkingUsers,
 } from "../controllers/adminController.js";
 import {
   createSubscription,
@@ -74,4 +79,10 @@ router.delete("/coupon/:id", deleteCoupon);
 router.get("/coupons/active", getActiveCoupons);
 // Route to toggle coupon status
 router.patch("/coupon/:couponId/toggle", toggleCouponStatus);
+//get all users based on roles
+router.get("/enterprise", getEnterpriseUsers);
+router.get("/professional", getProfessionalUsers);
+router.get("/intern", getInternUsers);
+router.get("/investor", getInvestorUsers);
+router.get("/networking", getNetworkingUsers);
 export default router;

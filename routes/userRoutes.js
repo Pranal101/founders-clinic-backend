@@ -13,6 +13,8 @@ import {
   getApplicantsForEnterprise,
   getAllInvestors,
   loginUser,
+  getSkills,
+  addSkill,
 } from "../controllers/userController.js";
 import {
   fetchEnterpriseProfileByUid,
@@ -22,6 +24,9 @@ import {
 import {
   deleteEducation,
   deleteExperience,
+  deleteInternEducation,
+  deleteInternExperience,
+  getAllInterns,
   getAllProfessionals,
 } from "../controllers/professionalController.js";
 import {
@@ -51,6 +56,10 @@ router.route("/role").patch(authenticateUser, addRole);
 router.route("/getRole").get(authenticateUser, getRole);
 // Update or create profile
 router.patch("/profile", authenticateUser, updateProfile);
+//SKILLS
+router.get("/skills", getSkills);
+router.post("/add-skills", addSkill);
+
 //Upload documents
 router.post("/upload", upload.single("file"), uploadDocuments);
 //Upload Logo
@@ -91,6 +100,10 @@ router.patch("/profile/education", deleteEducation);
 router.patch("/profile/experience", deleteExperience);
 
 router.get("/view-professionals", getAllProfessionals);
+/*INTERN ROUTES*/
+router.get("/view-interns", getAllInterns);
+router.patch("/profile/intern-experience", deleteInternExperience);
+router.patch("/profile/intern-education", deleteInternEducation);
 /*Networking Community ROUTES*/
 router.post("/new-events", authenticateUser, createEvent);
 

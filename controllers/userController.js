@@ -10,6 +10,7 @@ import Job from "../models/jobModel.js";
 import multer from "multer";
 import bcrypt from "bcrypt";
 import NetworkingCommunity from "../models/networkingCommunity.js";
+import Skill from "../models/skillModel.js";
 const upload = multer({ dest: "uploads/" });
 // Create a new user and corresponding profile
 // export const registerUser = async (req, res) => {
@@ -203,7 +204,9 @@ export const addRole = async (req, res) => {
 };
 export const updateProfile = async (req, res) => {
   const { profileData } = req.body; // Form data from the frontend
+  console.log(req.body);
   const userId = req.user.uid; // User's unique identifier from middleware
+  console.log("userid:", userId);
 
   try {
     const user = await User.findOne({ uid: userId });
@@ -552,5 +555,41 @@ export const getAllInvestors = async (req, res) => {
   } catch (error) {
     console.error("Error fetching investors:", error);
     res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
+export const getSkills = async (req, res) => {
+  try {
+    const skillDoc = await Skill.findOne({});
+    if (!skillDoc) {
+      return res.status(200).json([]); // Return an empty array if no document exists
+    }
+    res.status(200).json(skillDoc.skills);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching skills" });
+  }
+};
+
+export const addSkill = async (req, res) => {
+  try {
+    const { skills } = req.body; // Expecting an array of skill names
+    if (!skills || !Array.isArray(skills)) {
+      return res.status(400).json({ error: "Invalid skills data" });
+    }
+
+    // Normalize skills to lowercase to handle case insensitivity
+    const normalizedSkills = skills.map((skill) => skill.trim().toLowerCase());
+
+    const skillDoc = await Skill.findOneAndUpdate(
+      {},
+      {
+        $addToSet: { skills: { $each: normalizedSkills } }, // Add unique skills to the array
+      },
+      { upsert: true, new: true } // Create document if it doesn't exist
+    );
+
+    res.status(201).json(skillDoc.skills);
+  } catch (error) {
+    res.status(500).json({ error: "Error adding skills" });
   }
 };

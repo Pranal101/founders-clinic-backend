@@ -28,13 +28,37 @@ const internProfileSchema = new mongoose.Schema({
   preferredLocation: { type: String },
   skills: [{ type: String }],
   softwareProficiency: { type: String },
+  educationBackground: [
+    {
+      _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        default: () => new mongoose.Types.ObjectId(),
+      },
+      degree: { type: String },
+      school: { type: String },
+      year: { type: String },
+      description: { type: String },
+    },
+  ],
   workExperienceBoolean: { type: String },
+  // workExperience: [
+  //   {
+  //     companyName: String,
+  //     role: String,
+  //     duration: String,
+  //     responsibilities: String,
+  //   },
+  // ],
   workExperience: [
     {
-      companyName: String,
-      role: String,
-      duration: String,
-      responsibilities: String,
+      _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        default: () => new mongoose.Types.ObjectId(),
+      },
+      position: { type: String },
+      company: { type: String },
+      year: { type: String },
+      description: { type: String },
     },
   ],
   workingEnvironment: { type: String },
@@ -44,6 +68,7 @@ const internProfileSchema = new mongoose.Schema({
   references: [{ type: String }],
   additionalInfo: { type: String },
   specificExpectations: { type: String },
+  isShortlisted: { type: Boolean, default: false },
   documents: [
     {
       type: mongoose.Schema.Types.ObjectId,
