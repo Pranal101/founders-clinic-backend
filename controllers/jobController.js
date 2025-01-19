@@ -1,5 +1,6 @@
 import moment from "moment-timezone";
 import Job from "../models/jobModel.js";
+import Skill from "../models/skillModel.js";
 import EnterpriseProfile from "../models/enterpriseProfile.js";
 
 // 1. Create a Job Posting
@@ -23,6 +24,7 @@ export const createJob = async (req, res) => {
       budgetFlexibility,
       expectedStartDate,
       completionTimeline,
+      isClosed,
     } = req.body;
 
     // Get the authenticated user's ID from the request
@@ -214,5 +216,86 @@ export const getEnterpriseIdByJobId = async (req, res) => {
     res
       .status(500)
       .json({ error: "An error occurred while fetching enterpriseId." });
+  }
+};
+//get matchmaked jobs only
+export const getMatchingJobsBySkills = async (req, res) => {
+  try {
+    const { uid } = req.user; // Get the user ID from the request
+
+    if (!uid) {
+      return res.status(400).json({ error: "User ID (uid) is required." });
+    }
+
+    // Fetch the user's skills from the Skill model
+    const skillDocument = await Skill.findOne();
+    if (!skillDocument) {
+      return res.status(404).json({ error: "Skill document not found." });
+    }
+
+    // Find the user in the userSkills array
+    const userSkillsObj = skillDocument.userSkills.find(
+      (user) => user.uid === uid
+    );
+
+    if (!userSkillsObj) {
+      return res.status(404).json({ error: "User skills not found." });
+    }
+
+    const userSkills = userSkillsObj.skills;
+
+    // Fetch all approved jobs
+    const jobs = await Job.find({ isApproved: true, isClosed: false });
+
+    // Filter jobs based on skill match
+    const matchedJobs = jobs.map((job) => {
+      // Find the matching skills between the user's skills and the job's required skills
+      const matchedSkills = job.skillsRequired.filter((skill) =>
+        userSkills.includes(skill)
+      );
+
+      // Calculate the skill match score
+      const matchScore = matchedSkills.length;
+
+      return {
+        job,
+        matchScore,
+      };
+    });
+
+    // Sort jobs based on match score (higher match score first)
+    const sortedMatchedJobs = matchedJobs
+      .filter((item) => item.matchScore > 0) // Only include jobs with at least 1 matched skill
+      .sort((a, b) => b.matchScore - a.matchScore) // Sort jobs by match score in descending order
+      .map((item) => item.job); // Extract only the job data
+
+    res.status(200).json({
+      message: "Jobs fetched successfully",
+      jobs: sortedMatchedJobs,
+    });
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+export const toggleJobStatus = async (req, res) => {
+  try {
+    const { jobId } = req.params;
+
+    const job = await Job.findById(jobId);
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+
+    // Toggle the isClosed status
+    job.isClosed = !job.isClosed;
+    await job.save();
+
+    res.status(200).json({
+      message: `Job has been ${job.isClosed ? "closed" : "reopened"}`,
+      job,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating job status", error });
   }
 };

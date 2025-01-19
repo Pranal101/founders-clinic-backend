@@ -17,6 +17,8 @@ import {
   getInternUsers,
   getInvestorUsers,
   getNetworkingUsers,
+  getClosedJobCount,
+  getTotalJobCount,
 } from "../controllers/adminController.js";
 import {
   createSubscription,
@@ -85,4 +87,8 @@ router.get("/professional", getProfessionalUsers);
 router.get("/intern", getInternUsers);
 router.get("/investor", getInvestorUsers);
 router.get("/networking", getNetworkingUsers);
+//get all closed projects
+router.get("/closed-jobs", getClosedJobCount);
+//total project count
+router.get("/total-job-count", getTotalJobCount);
 export default router;

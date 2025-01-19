@@ -38,6 +38,10 @@ const jobSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  isClosed: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Job = mongoose.model("Job", jobSchema);

@@ -15,6 +15,11 @@ import {
   loginUser,
   getSkills,
   addSkill,
+  addUserSkills,
+  getUserSkills,
+  removeUserSkills,
+  toggleShortlistedStatus,
+  getApplicantsForJob,
 } from "../controllers/userController.js";
 import {
   fetchEnterpriseProfileByUid,
@@ -59,7 +64,9 @@ router.patch("/profile", authenticateUser, updateProfile);
 //SKILLS
 router.get("/skills", getSkills);
 router.post("/add-skills", addSkill);
-
+router.get("/user-skills", authenticateUser, getUserSkills); // Fetch user-specific skills
+router.post("/add-user-skills", authenticateUser, addUserSkills); // Add skills
+router.post("/remove-user-skills", authenticateUser, removeUserSkills);
 //Upload documents
 router.post("/upload", upload.single("file"), uploadDocuments);
 //Upload Logo
@@ -85,7 +92,9 @@ router
   .get(authenticateUser, fetchEnterpriseProfileByUid);
 router.put("/:applicationId/status", updateApplicationStatus);
 router.get("/applicants", authenticateUser, getApplicantsForEnterprise);
+router.get("/applicants/:jobId", authenticateUser, getApplicantsForJob);
 router.get("/view-enterprises", viewAllEnterprises);
+router.patch("/:applicationId/shortlisted", toggleShortlistedStatus);
 //investements
 router.post("/investments", authenticateUser, createInvestment);
 router.get("/all-investments", authenticateUser, getAllInvestments);

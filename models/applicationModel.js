@@ -13,6 +13,10 @@ const applicationSchema = new mongoose.Schema({
     type: String,
     default: "Pending",
   },
+  isShortlisted: {
+    type: Boolean,
+    default: false,
+  },
   appliedDate: { type: Date, default: Date.now },
   resumeLink: { type: String },
   message: { type: String },

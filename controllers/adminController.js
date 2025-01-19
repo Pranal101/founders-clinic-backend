@@ -371,3 +371,35 @@ export const getInvestorUsers = async (req, res) => {
 export const getNetworkingUsers = async (req, res) => {
   await getUsersByRole(req, res, "Networking Community");
 };
+//all closed jobs(admin)
+export const getClosedJobCount = async (req, res) => {
+  try {
+    const closedJobCount = await Job.countDocuments({ isClosed: true });
+    res.status(200).json({
+      success: true,
+      data: closedJobCount,
+    });
+  } catch (error) {
+    console.error("Error fetching closed job count:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch closed job count",
+    });
+  }
+};
+//total job count
+export const getTotalJobCount = async (req, res) => {
+  try {
+    const totalJobCount = await Job.countDocuments();
+    res.status(200).json({
+      success: true,
+      data: totalJobCount,
+    });
+  } catch (error) {
+    console.error("Error fetching total job count:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch total job count",
+    });
+  }
+};
