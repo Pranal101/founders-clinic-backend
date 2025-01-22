@@ -16,11 +16,15 @@ const enterpriseProfileSchema = new mongoose.Schema({
   entitySize: {
     type: String,
   },
+  businessName: {
+    type: String,
+  },
   businessType: {
     type: String,
-    enum: ["Sole Proprietorship", "Partnership", "LLP", "OPC", "Pvt. Ltd."],
   },
   foundedYear: { type: Number },
+  businessCountry: { type: String },
+  businessCity: { type: String },
   industryType: { type: String },
   businessDescription: { type: String },
   contactNumber: { type: String },
@@ -30,10 +34,10 @@ const enterpriseProfileSchema = new mongoose.Schema({
   country: { type: String },
   city: { type: String },
   completeAddress: { type: String },
-  teamSize: {
+  currentBusninessStage: {
     type: String,
   },
-  currentBusninessStage: {
+  otherBusinessStage: {
     type: String,
   },
   fundingDetails: {
@@ -46,9 +50,8 @@ const enterpriseProfileSchema = new mongoose.Schema({
     seekingFundingAmount: { type: Number }, // New field for funding amount they are seeking
   },
   servicesOffered: { type: String }, // New field for mentioning products/services offered
-  targetMarket: { type: String }, // New field for specifying target market
   platformServices: [{ type: String }], // New field for services expected from the platform
-  platformExpectations: { type: String }, // New field for key expectations from the platform
+  additionalInfo: { type: String },
   coFounderName: { type: String }, // New field for Founder/Co-founder Name
   documents: [
     {

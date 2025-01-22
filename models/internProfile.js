@@ -13,13 +13,20 @@ const internProfileSchema = new mongoose.Schema({
   city: { type: String },
   completeAddress: { type: String },
   acceptTerms: { type: Boolean, default: false },
+  //form-2
+  fullName: { type: String },
+  email2: { type: String },
+  contactNumber2: { type: String },
+  currentCountry: { type: String },
+  currentCity: { type: String },
+  nationality: { type: String },
   linkedinUrl: { type: String },
   educationStatus: {
     type: String,
   },
+  otherEducation: { type: String },
   institutionName: { type: String },
   major: { type: String },
-  graduationDate: { type: Date },
   certifications: { type: String },
   internshipPreferences: [{ type: String }],
   preferredDuration: { type: String },
@@ -27,6 +34,7 @@ const internProfileSchema = new mongoose.Schema({
   preferredIndustries: [{ type: String }],
   preferredLocation: { type: String },
   skills: [{ type: String }],
+  otherSkills: [{ type: String }],
   softwareProficiency: { type: String },
   educationBackground: [
     {
@@ -61,13 +69,8 @@ const internProfileSchema = new mongoose.Schema({
       description: { type: String },
     },
   ],
-  workingEnvironment: { type: String },
-  portfolioBoolean: { type: String },
-  portfolioLink: { type: String },
-  previousProjects: { type: String },
   references: [{ type: String }],
   additionalInfo: { type: String },
-  specificExpectations: { type: String },
   isShortlisted: { type: Boolean, default: false },
   documents: [
     {
