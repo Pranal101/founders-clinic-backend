@@ -30,7 +30,7 @@ const internProfileSchema = new mongoose.Schema({
   certifications: { type: String },
   internshipPreferences: [{ type: String }],
   preferredDuration: { type: String },
-  preferredStartDate: { type: Date },
+  preferredStartDate: { type: String },
   preferredIndustries: [{ type: String }],
   preferredLocation: { type: String },
   skills: [{ type: String }],
