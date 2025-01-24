@@ -10,6 +10,7 @@ import {
   getEnterpriseIdByJobId,
   getMatchingJobsBySkills,
   toggleJobStatus,
+  countJobs,
 } from "../controllers/jobController.js";
 
 const router = express.Router();
@@ -19,6 +20,8 @@ router.post("/create-job", authenticateUser, createJob);
 
 // Route to get all jobs for professionals and interns
 router.get("/get-all-jobs", authenticateUser, getAllJobs);
+// Route to get all jobs for professionals and interns
+router.get("/jobs-count", countJobs);
 //get matchmaking jobs
 router.get("/match-skills", authenticateUser, getMatchingJobsBySkills);
 

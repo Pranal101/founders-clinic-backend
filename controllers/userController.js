@@ -827,3 +827,27 @@ export const toggleShortlistedStatus = async (req, res) => {
       .json({ message: "Error updating shortlisted status", error });
   }
 };
+// Controller to get the count of applications for an applicant
+export const getApplicationCountByApplicant = async (req, res) => {
+  const applicantId = req.user.uid;
+
+  try {
+    // Ensure applicantId is provided
+    if (!applicantId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Applicant ID is required" });
+    }
+
+    // Count applications matching the applicantId
+    const applicationCount = await Application.countDocuments({ applicantId });
+
+    res.status(200).json({ success: true, count: applicationCount });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error fetching application count",
+      error,
+    });
+  }
+};

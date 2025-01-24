@@ -20,9 +20,11 @@ import {
   removeUserSkills,
   toggleShortlistedStatus,
   getApplicantsForJob,
+  getApplicationCountByApplicant,
 } from "../controllers/userController.js";
 import {
   fetchEnterpriseProfileByUid,
+  getEnterpriseProfileById,
   updateApplicationStatus,
   viewAllEnterprises,
 } from "../controllers/enterpriseContrtoller.js";
@@ -61,6 +63,12 @@ router.route("/role").patch(authenticateUser, addRole);
 router.route("/getRole").get(authenticateUser, getRole);
 // Update or create profile
 router.patch("/profile", authenticateUser, updateProfile);
+
+router.get(
+  "/inquiries-count",
+  authenticateUser,
+  getApplicationCountByApplicant
+);
 //SKILLS
 router.get("/skills", getSkills);
 router.post("/add-skills", addSkill);
@@ -95,6 +103,9 @@ router.get("/applicants", authenticateUser, getApplicantsForEnterprise);
 router.get("/applicants/:jobId", authenticateUser, getApplicantsForJob);
 router.get("/view-enterprises", viewAllEnterprises);
 router.patch("/:applicationId/shortlisted", toggleShortlistedStatus);
+//get enterprise by id
+router.get("/enterprise-details/:id", getEnterpriseProfileById);
+
 //investements
 router.post("/investments", authenticateUser, createInvestment);
 router.get("/all-investments", authenticateUser, getAllInvestments);

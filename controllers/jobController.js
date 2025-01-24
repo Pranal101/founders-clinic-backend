@@ -299,3 +299,14 @@ export const toggleJobStatus = async (req, res) => {
     res.status(500).json({ message: "Error updating job status", error });
   }
 };
+//count all jobs
+export const countJobs = async (req, res) => {
+  try {
+    const jobCount = await Job.countDocuments();
+    res.status(200).json({ success: true, count: jobCount });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Error counting jobs", error });
+  }
+};

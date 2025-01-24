@@ -96,3 +96,31 @@ export const viewAllEnterprises = async (req, res) => {
     });
   }
 };
+//get enterprise by id
+export const getEnterpriseProfileById = async (req, res) => {
+  try {
+    const { id } = req.params; // Extract _id from request parameters
+    const profile = await EnterpriseProfile.findById(id)
+      .populate("documents") // Populate documents if needed
+      .exec();
+
+    if (!profile) {
+      return res.status(404).json({
+        success: false,
+        message: "Enterprise profile not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: profile,
+    });
+  } catch (error) {
+    console.error("Error fetching enterprise profile:", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching the enterprise profile",
+      error: error.message,
+    });
+  }
+};

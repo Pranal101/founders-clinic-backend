@@ -3,7 +3,8 @@ import Coupon from "../models/couponModel.js";
 // Create a new coupon
 export const createCoupon = async (req, res) => {
   try {
-    const { code, discount, type, expirationDate } = req.body;
+    const { code, discount, userType, description, type, expirationDate } =
+      req.body;
 
     // Validate input
     if (!code || discount === undefined || !type || !expirationDate) {
@@ -24,7 +25,14 @@ export const createCoupon = async (req, res) => {
     }
 
     // Create and save the coupon
-    const coupon = new Coupon({ code, discount, type, expirationDate });
+    const coupon = new Coupon({
+      code,
+      discount,
+      description,
+      userType,
+      type,
+      expirationDate,
+    });
     await coupon.save();
 
     res.status(201).json({ message: "Coupon created successfully.", coupon });

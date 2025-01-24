@@ -13,9 +13,6 @@ const enterpriseProfileSchema = new mongoose.Schema({
   companyRole: { type: String },
   whatsAppNumber: { type: String },
   entityName: { type: String, required: true },
-  entitySize: {
-    type: String,
-  },
   businessName: {
     type: String,
   },
