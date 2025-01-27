@@ -10,8 +10,10 @@ import User from "../models/userModel.js";
 // Get all Jobs (for ADMIN)
 export const getAllJobs = async (req, res) => {
   try {
-    // Fetch all jobs from the database
-    const jobs = await Job.find().populate("enterpriseId", "entityName");
+    // Fetch all jobs from the database and sort by _id in descending order (latest first)
+    const jobs = await Job.find()
+      .populate("enterpriseId", "entityName")
+      .sort({ _id: -1 });
 
     res.status(200).json({
       message: "All jobs fetched successfully",
@@ -177,7 +179,7 @@ export const getAllProfiles = async (req, res) => {
 export const getAllEvents = async (req, res) => {
   try {
     // Fetch all events
-    const events = await Events.find();
+    const events = await Events.find().sort({ _id: -1 });
 
     if (events.length === 0) {
       return res.status(404).json({
@@ -254,7 +256,11 @@ export const rejectEvent = async (req, res) => {
 //get all users
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({}, "name email role isApproved");
+    // Sort by the _id field in descending order (newest first)
+    const users = await User.find({}, "name email role isApproved").sort({
+      _id: -1,
+    }); // Sort by _id descending (latest first)
+
     res.status(200).json({
       success: true,
       users,

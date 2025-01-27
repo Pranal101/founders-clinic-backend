@@ -45,7 +45,9 @@ export const createCoupon = async (req, res) => {
 // View all coupons
 export const getAllCoupons = async (req, res) => {
   try {
-    const coupons = await Coupon.find();
+    // Fetch all coupons from the database and sort by _id in descending order (latest first)
+    const coupons = await Coupon.find().sort({ _id: -1 });
+
     res.status(200).json({ coupons });
   } catch (error) {
     console.error("Error fetching coupons:", error);
