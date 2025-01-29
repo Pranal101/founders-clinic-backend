@@ -51,9 +51,9 @@ const professionalProfileSchema = new mongoose.Schema({
   ],
   certifications: [{ type: String }],
   associations: { type: String },
+  skills: [{ type: String }],
   servicesOffered: [{ type: String }],
   otherServiceOffered: { type: String },
-
   painPoints: { type: String },
   industryExpertise: { type: String },
   clientTestimonials: { type: String },

@@ -181,10 +181,7 @@ export const getJobById = async (req, res) => {
 export const getAllJobs = async (req, res) => {
   try {
     // Fetch all jobs with isApproved set to true
-    const jobs = await Job.find({ isApproved: true }).populate(
-      "enterpriseId",
-      "entityName"
-    );
+    const jobs = await Job.find().populate("enterpriseId", "entityName");
 
     res.status(200).json({
       message: "Jobs fetched successfully",

@@ -17,13 +17,13 @@ const jobSchema = new mongoose.Schema({
     type: String,
   },
   skillsRequired: { type: [String], default: [] },
-  jobLocation: {
-    type: String,
-  },
+  industry: { type: String },
+  foundedYear: { type: String },
   experience: {
     type: String,
   },
   genderPreference: { type: String },
+  currency: { type: String },
   budget: { type: String },
   budgetFlexibility: {
     type: String,

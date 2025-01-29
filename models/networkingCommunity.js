@@ -15,6 +15,7 @@ const networkingCommunityProfileSchema = new mongoose.Schema({
   websiteUrl: { type: String },
   completeAddress: { type: String },
   acceptTerms: { type: Boolean, default: false },
+  gst: { type: String },
   primaryFocus: [{ type: String }],
   primaryFocusOther: { type: String },
   numberOfMembers: {

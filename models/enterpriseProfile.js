@@ -19,9 +19,11 @@ const enterpriseProfileSchema = new mongoose.Schema({
   businessType: {
     type: String,
   },
+  gst: { type: String },
   foundedYear: { type: Number },
   businessCountry: { type: String },
   businessCity: { type: String },
+  skills: [{ type: String }],
   industryType: { type: String },
   businessDescription: { type: String },
   contactNumber: { type: String },
