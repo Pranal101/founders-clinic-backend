@@ -103,7 +103,6 @@ export const getJobs = async (req, res) => {
     // Fetch jobs for this enterprise profile
     const jobs = await Job.find({
       enterpriseId: userId,
-      isApproved: true, // Ensure only approved jobs are fetched
     });
 
     res.status(200).json({
