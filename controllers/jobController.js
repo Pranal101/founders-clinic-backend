@@ -19,9 +19,12 @@ export const createJob = async (req, res) => {
       supportDescription,
       supportDuration,
       skills,
+      industry,
+      foundedYear,
       jobLocation,
       experience,
       genderPreference,
+      currency,
       budget,
       budgetFlexibility,
       expectedStartDate,
@@ -56,9 +59,12 @@ export const createJob = async (req, res) => {
       supportDescription,
       supportDuration,
       skills,
+      industry,
+      foundedYear,
       jobLocation,
       experience,
       genderPreference,
+      currency,
       budget,
       budgetFlexibility,
       expectedStartDate,
@@ -316,28 +322,41 @@ export const matchJobsToUsers = async (req, res) => {
 
     let matchedJobs = [];
 
-    if (role === "intern") {
+    if (role === "Intern") {
       const intern = await InternProfile.findOne({ userId: uid });
-      if (!intern) return res.status(404).json({ message: "Intern not found" });
+      if (!intern) {
+        console.log("Intern profile not found.");
+        return res.status(404).json({ message: "Intern not found" });
+      }
 
       matchedJobs = await Job.find({
-        bussinessSupport: "Intern",
-        skills: { $in: intern.skills },
+        bussinessSupport: { $in: ["interns"] }, // Case-sensitive fix and array check
+        skills: {
+          $in: intern.skills.map((skill) => new RegExp(`^${skill}$`, "i")),
+        },
       });
-    } else if (role === "professional") {
+    } else if (role === "Professional") {
       const professional = await ProfessionalProfile.findOne({ userId: uid });
-      if (!professional)
+      if (!professional) {
+        console.log("Professional profile not found.");
         return res.status(404).json({ message: "Professional not found" });
+      }
 
       matchedJobs = await Job.find({
-        bussinessSupport: { $in: professional.skills },
+        bussinessSupport: {
+          $in: professional.servicesOffered.map(
+            (service) => new RegExp(`^${service}$`, "i")
+          ),
+        },
       });
     } else {
+      console.log("Invalid user role.");
       return res.status(400).json({ message: "Invalid user role" });
     }
 
     res.status(200).json(matchedJobs);
   } catch (error) {
+    console.error("Error during job matchmaking:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
