@@ -11,6 +11,7 @@ import {
   getMatchingJobsBySkills,
   toggleJobStatus,
   countJobs,
+  matchJobsToUsers,
 } from "../controllers/jobController.js";
 
 const router = express.Router();
@@ -24,6 +25,7 @@ router.get("/get-all-jobs", authenticateUser, getAllJobs);
 router.get("/jobs-count", countJobs);
 //get matchmaking jobs
 router.get("/match-skills", authenticateUser, getMatchingJobsBySkills);
+router.get("/match-jobs", authenticateUser, matchJobsToUsers);
 
 // Route to fetch job postings (all or by enterprise)
 router.get("/all-jobs", authenticateUser, getJobs);

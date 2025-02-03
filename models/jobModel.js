@@ -16,6 +16,7 @@ const jobSchema = new mongoose.Schema({
   supportDuration: {
     type: String,
   },
+  skills: { type: [String], default: [] },
   // skillsRequired: { type: [String], default: [] },
   industry: { type: String },
   foundedYear: { type: String },

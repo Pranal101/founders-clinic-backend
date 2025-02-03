@@ -2,6 +2,8 @@ import moment from "moment-timezone";
 import Job from "../models/jobModel.js";
 import Skill from "../models/skillModel.js";
 import EnterpriseProfile from "../models/enterpriseProfile.js";
+import InternProfile from "../models/internProfile.js";
+import ProfessionalProfile from "../models/professionalProfile.js";
 
 // 1. Create a Job Posting
 export const createJob = async (req, res) => {
@@ -16,7 +18,7 @@ export const createJob = async (req, res) => {
       otherbussinessSupport,
       supportDescription,
       supportDuration,
-      skillsRequired,
+      skills,
       jobLocation,
       experience,
       genderPreference,
@@ -53,7 +55,7 @@ export const createJob = async (req, res) => {
       otherbussinessSupport,
       supportDescription,
       supportDuration,
-      skillsRequired,
+      skills,
       jobLocation,
       experience,
       genderPreference,
@@ -305,5 +307,37 @@ export const countJobs = async (req, res) => {
     res
       .status(500)
       .json({ success: false, message: "Error counting jobs", error });
+  }
+};
+
+export const matchJobsToUsers = async (req, res) => {
+  try {
+    const { uid, role } = req.user; // Extracted from middleware
+
+    let matchedJobs = [];
+
+    if (role === "intern") {
+      const intern = await InternProfile.findOne({ userId: uid });
+      if (!intern) return res.status(404).json({ message: "Intern not found" });
+
+      matchedJobs = await Job.find({
+        bussinessSupport: "Intern",
+        skills: { $in: intern.skills },
+      });
+    } else if (role === "professional") {
+      const professional = await ProfessionalProfile.findOne({ userId: uid });
+      if (!professional)
+        return res.status(404).json({ message: "Professional not found" });
+
+      matchedJobs = await Job.find({
+        bussinessSupport: { $in: professional.skills },
+      });
+    } else {
+      return res.status(400).json({ message: "Invalid user role" });
+    }
+
+    res.status(200).json(matchedJobs);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
