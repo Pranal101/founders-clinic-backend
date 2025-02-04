@@ -102,3 +102,17 @@ export const getProfessionalSubscriptions = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+// Controller for fetching subscriptions for Networking users
+export const getNetworkingSubscriptions = async (req, res) => {
+  try {
+    const subscriptions = await Subscription.find({ userType: "networking" });
+
+    res.status(200).json({
+      message: "Networking subscriptions retrieved successfully",
+      subscriptions,
+    });
+  } catch (error) {
+    console.error("Error retrieving networking subscriptions:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

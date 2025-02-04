@@ -26,6 +26,7 @@ import {
   getAllSubscriptions,
   getEnterpriseSubscriptions,
   getInternSubscriptions,
+  getNetworkingSubscriptions,
   getProfessionalSubscriptions,
 } from "../controllers/subscriptionController.js";
 import {
@@ -69,6 +70,8 @@ router.get("/subscriptions/intern", getInternSubscriptions);
 
 // Route to get subscriptions for Professional users
 router.get("/subscriptions/professional", getProfessionalSubscriptions);
+// Route to get subscriptions for Networking users
+router.get("/subscriptions/networking", getNetworkingSubscriptions);
 
 //coupons
 // Create a coupon
