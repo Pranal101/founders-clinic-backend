@@ -39,6 +39,7 @@ import {
 import {
   createEvent,
   deleteEvent,
+  getAllEvents,
   getAllNetworkingCommunities,
   getEventById,
   getEvents,
@@ -129,6 +130,8 @@ router.post("/new-events", authenticateUser, createEvent);
 
 // Get approved events
 router.get("/get-events", authenticateUser, getEvents);
+//get all events
+router.get("/events/all-events", getAllEvents);
 // Delete an event by ID
 router.delete("/events/:eventId", deleteEvent);
 router.get("/events/:eventId", getEventById);
