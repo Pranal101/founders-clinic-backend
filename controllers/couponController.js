@@ -149,7 +149,7 @@ export const toggleCouponStatus = async (req, res) => {
 export const getActiveCoupons = async (req, res) => {
   try {
     // Find all coupons where isActive is true
-    const activeCoupons = await Coupon.find();
+    const activeCoupons = await Coupon.find({ isActive: true });
 
     if (activeCoupons.length === 0) {
       return res.status(404).json({ message: "No active coupons found" });
