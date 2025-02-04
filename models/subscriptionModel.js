@@ -11,13 +11,15 @@ const subscriptionSchema = new mongoose.Schema({
     type: String,
     required: true, // Subscription type, e.g., Basic, Premium
   },
-  price: {
+  priceINR: {
     type: Number,
     required: true, // Price of the subscription
   },
+  priceUSD: {
+    type: Number,
+  },
   duration: {
     type: String,
-    required: true, // e.g., "1 month", "1 year"
   },
   features: {
     type: [String], // List of features included in the subscription

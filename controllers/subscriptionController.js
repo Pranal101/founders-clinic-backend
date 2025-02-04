@@ -1,13 +1,15 @@
 import Subscription from "../models/subscriptionModel.js";
 
 export const createSubscription = async (req, res) => {
-  const { userType, image, type, price, duration, features } = req.body;
+  const { userType, image, type, priceINR, priceUSD, duration, features } =
+    req.body;
 
   try {
     const subscription = new Subscription({
       image,
       type,
-      price,
+      priceINR,
+      priceUSD,
       duration,
       features,
       userType,
