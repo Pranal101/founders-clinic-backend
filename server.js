@@ -11,6 +11,6 @@ dotenv.config();
 connectDatabase();
 
 //server start
-app.listen(process.env.PORT, () => {
-  console.log(`Server started on http://localhost:${process.env.PORT}`);
+app.listen(process.env.PORT, "0.0.0.0", () => {
+  console.log(`Server started on http://0.0.0.0:${process.env.PORT}`);
 });
