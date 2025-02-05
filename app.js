@@ -4,6 +4,7 @@ import userRoutes from "./routes/userRoutes.js";
 import jobRoutes from "./routes/jobRoutes.js";
 import linkedinRoutes from "./routes/linkedinRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import razorpayRoutes from "./controllers/razorpayController.js";
 import bodyParser from "body-parser";
 
 const app = express();
@@ -27,5 +28,6 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/linkedin", linkedinRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/jobs", jobRoutes);
+app.use("/api/razorpay", razorpayRoutes);
 
 export default app;
